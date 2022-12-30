@@ -4,7 +4,7 @@ import datetime as dt
 
 class NodeSshController:
     def __init__(self, ip, password = "rpi"):
-        print("Initializing controller...")
+        print("Initializing SSH controller...")
         self.ip = ip
         self.password = password
 
@@ -14,7 +14,7 @@ class NodeSshController:
             self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             self.ssh.connect(ip, username="rpi", password=password)
         except paramiko.ssh_exception.NoValidConnectionsError:
-            print(f"Could not connect to the host {self.ip}")
+            print(f"\tCould not connect to the host {self.ip}")
             self.ssh = None
             return
 
@@ -39,5 +39,5 @@ class NodeSshController:
     def __del__(self):
         if self.ssh is None:
             return
-        print(f"Deleting SSH controller. Closing connection to remote {self.ip}")
+        print(f"Closing connection to remote {self.ip}")
         self.ssh.close()

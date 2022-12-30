@@ -9,17 +9,16 @@ class K3sNode:
         self.connection_failed = False
 
         # SSH connection
-        print(f"Connecting to target node {ip}.")
+        print(f"\tConnecting to target node {ip}.")
         self.ssh = NodeSshController(ip)
         if self.ssh is None:
             self.connection_failed = True
 
-
     def overwrite_config_files(self):
-        pass
+        print("\tAppending required flags to config files.")
 
     def install_required_modules(self):
-        pass
+        print("\tInstalling missing Ubuntu packages for raspberry:")
 
     def __str__(self):
         return f"IP: {self.ip}, name: {self.node_name} - node"
