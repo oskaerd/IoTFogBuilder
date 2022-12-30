@@ -18,15 +18,23 @@ class NodeSshController:
             self.ssh = None
             return
 
-        session = self.ssh.get_transport().open_session()
+        self.session = self.ssh.get_transport().open_session()
         # Combine the streams to have errors printed on std.
-        session.set_combine_stderr(True)
+        self.session.set_combine_stderr(True)
         # Request pseudo-terminal from the raspberry.
         # It is required to type back the password to enter sudo commands.
-        session.get_pty()
+        self.session.get_pty()
 
     def sudo_command(self, command):
-        pass
+        self.session.exec_command(f"sudo bash -c \"{command}\"")
+        stdin = self.session.makefile("wb", -1)
+        stdout = self.session.makefile("rb", -1)
+
+        # TODO check if promped for password
+        print(stdout.read())
+        stdin.write(f"{self.password}\n")
+        stdin.flush()
+        print(stdout.read().decode("utf-8"))
 
     def __del__(self):
         if self.ssh is None:

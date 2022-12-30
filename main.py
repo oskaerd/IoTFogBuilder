@@ -24,19 +24,6 @@ if __name__ == "__main__":
     configurator = K3sRpiConfigurator('rpis.json')
 
 
-# test the connection
-# now = str(dt.datetime.now())
-# print(now.replace(' ', '-')[:now.find('.')])
-
-
-# session.exec_command("sudo bash -c \"mkdir /etc/test\"")
-# stdin = session.makefile("wb", -1)
-# stdout = session.makefile("rb", -1)
-
-# stdin.write(f"{password}\n")
-# stdin.flush()
-# print(stdout.read().decode("utf-8"))
-
 # #stdin, stdout, stderr = ssh.exec_command(f"touch /etc/test/{}")
 
 # # response = stdout.readlines()
