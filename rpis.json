@@ -1,0 +1,15 @@
+{
+    "machines": [
+        {
+            "name": "master",
+            "ip": "192.168.0.20",
+            "is_controler": "True"
+        }
+        // },
+        // {
+        //     "name": "client-rpi2",
+        //     "ip": "192.168.0.205",
+        //     "is_controler": "False"
+        // }
+    ]
+}
