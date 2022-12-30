@@ -1,12 +1,14 @@
 {
     "machines": [
         {
-            "name": "master",
+            "username": "rpi",
+            "node_name": "main",
             "ip": "192.168.0.20",
             "is_controller": 1
         },
         {
-            "name": "client-rpi2",
+            "username": "rpi",
+            "node_name": "client-rpi2",
             "ip": "192.168.0.205",
             "is_controller": 0
         }
