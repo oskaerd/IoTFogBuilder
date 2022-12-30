@@ -3,13 +3,12 @@
         {
             "name": "master",
             "ip": "192.168.0.20",
-            "is_controler": "True"
+            "is_controller": 1
+        },
+        {
+            "name": "client-rpi2",
+            "ip": "192.168.0.205",
+            "is_controller": 0
         }
-        // },
-        // {
-        //     "name": "client-rpi2",
-        //     "ip": "192.168.0.205",
-        //     "is_controler": "False"
-        // }
     ]
 }

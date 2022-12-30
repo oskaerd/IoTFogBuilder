@@ -1,0 +1,1 @@
+Python utility to configure RPi with freshly flashed SD card to work as an K3s node.
