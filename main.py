@@ -21,7 +21,7 @@ class K3sRpiConfigurator:
             print(f"\tStarting configuration of node {node.node_name}:{node.ip}")
             node.overwrite_firmware_config_files()
             print(f"\tFinished configuration of node {node.node_name}:{node.ip}")
-        print("Finished configuration of all the nodes from the JSON file.")
+        print("Finished configuration of all the nodes from the JSON file that were connected.")
 
 
 if __name__ == "__main__":
