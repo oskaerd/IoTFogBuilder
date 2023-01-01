@@ -17,28 +17,25 @@ class K3sNode:
     def overwrite_firmware_config_files(self, config_files_dir = '/boot/firmware'):
         print("\tAppending required flags to config files.")
 
-        # check if flags have not been already set in the file:
-        streams = self.ssh.command(f"grep \'add arm_64bit=1\' {config_files_dir}/config.txt")
-        if streams[1].read().decode('utf-8') == '':
-            self.ssh.command(f"cp {config_files_dir}/config.txt .")
-            self.ssh.command("echo \'add arm_64bit=1\' | tee -a config.txt")
-            streams = self.ssh.sudo_command(f"mv config.txt {config_files_dir}")
-        else:
-            print(f"\t{config_files_dir}/config.txt flags already present. Skipping.")
-        # This read is needed for file to be moved.
-        streams[1].read().decode('utf-8')
+        # filename, check for, modify command:
+        file_tuples = [
+            # /boot/firmware/config.txt
+            ("config.txt", 'add arm_64bit=1', "echo \'add arm_64bit=1\' | tee -a config.txt"),
+            # /boot/firmware/cmdline.txt
+            ("cmdline.txt", "cgroup_enable=memory", "echo $(cat cmdline.txt) cgroup_memory=1 cgroup_enable=memory > cmdline.txt")
+        ]
 
-        # cmdline.txt
-        streams = self.ssh.command(f"grep \"cgroup_enable=memory\" {config_files_dir}/cmdline.txt")
-        # check if flags have not been already set in the file:
-        if streams[1].read().decode('utf-8') == '':
-            self.ssh.command(f"cp {config_files_dir}/cmdline.txt .")
-            self.ssh.command("echo $(cat cmdline.txt) cgroup_memory=1 cgroup_enable=memory > cmdline.txt")
-            streams = self.ssh.sudo_command(f"mv cmdline.txt {config_files_dir}")
-        else:
-            print(f"\t{config_files_dir}/cmdline.txt flags already present. Skipping.")
-        # This read is needed for file to be moved.
-        streams[1].read().decode('utf-8')
+        for file_tuple in file_tuples:
+            # check if flags have not been already set in the file:
+            streams = self.ssh.command(f"grep \'{file_tuple[1]}\' {config_files_dir}/{file_tuple[0]}")
+            if streams[1].read().decode('utf-8') == '':
+                self.ssh.command(f"cp {config_files_dir}/{file_tuple[0]} .")
+                self.ssh.command(f"{file_tuple[2]}")
+                streams = self.ssh.sudo_command(f"mv {file_tuple[0]} {config_files_dir}")
+                # This read is needed for file to be moved.
+                streams[1].read().decode('utf-8')
+            else:
+                print(f"\t{config_files_dir}/{file_tuple[0]} flags already present. Skipping.")
 
     def install_required_modules(self):
         print("\tInstalling missing Ubuntu packages for raspberry:")
