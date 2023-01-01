@@ -19,7 +19,11 @@ class K3sRpiConfigurator:
         print("Begin configuration of the nodes:")
         for node in [self.nodes[0]]:
             print(f"\tStarting configuration of node {node.node_name}:{node.ip}")
+            # TODO uncomment
             node.overwrite_firmware_config_files()
+            node.prepare_k3s_config_file()
+            node.set_ip_tables()
+            node.install_required_modules()
             print(f"\tFinished configuration of node {node.node_name}:{node.ip}")
         print("Finished configuration of all the nodes from the JSON file that were connected.")
 
@@ -27,13 +31,3 @@ class K3sRpiConfigurator:
 if __name__ == "__main__":
     configurator = K3sRpiConfigurator('rpis.json')
     configurator.configure_nodes()
-
-
-# #stdin, stdout, stderr = ssh.exec_command(f"touch /etc/test/{}")
-
-# # response = stdout.readlines()
-
-# # for line in response:
-# #     print(line)
-
-# ssh.close()
