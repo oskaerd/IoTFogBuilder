@@ -17,8 +17,9 @@ class K3sRpiConfigurator:
 
     def configure_nodes(self):
         print("Begin configuration of the nodes:")
-        for node in self.nodes:
+        for node in [self.nodes[0]]:
             print(f"\tStarting configuration of node {node.node_name}:{node.ip}")
+            node.overwrite_firmware_config_files()
             print(f"\tFinished configuration of node {node.node_name}:{node.ip}")
         print("Finished configuration of all the nodes from the JSON file.")
 
