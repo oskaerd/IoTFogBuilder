@@ -117,22 +117,16 @@ class K3sControllerNode(K3sNode):
         self.ssh.command("mkdir .kube")
         # Append export of K3s config path to the .bashrc file.
         self.ssh.command(f"echo \"export KUBECONFIG=/home/{self.username}/.kube/config\" >> ~/.bashrc")
-        # TODO: check if it's needed
         # Source to have the variable available in current session
         self.ssh.command("source ~/.bashrc")
-        self.ssh.command("touch hi")
 
     def install_k3s(self):
         print('\tInstalling K3s on the controller node.')
         streams = self.ssh.sudo_command("curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE=\"644\" sh -s -")
         streams[1].readlines()
-        self.ssh.command("touch hello")
 
     def write_final_k3s_config_file(self):
-        streams = self.ssh.command("cp /etc/rancher/k3s/k3s.yaml $KUBECONFIG")
-        print(streams[1].readlines())
-        print(streams[2].readlines())
-        self.ssh.command("touch bb")
+        self.ssh.command(f"cp /etc/rancher/k3s/k3s.yaml /home/{self.username}/.kube/config")
         # TODO sed ip
 
     def __str__(self):
