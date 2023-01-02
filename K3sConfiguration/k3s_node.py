@@ -1,5 +1,10 @@
 from .ssh_controller import NodeSshController
 import time
+from abc import ABC, abstractmethod
+
+
+
+
 
 class K3sNode:
     def __init__(self, username, node_name, ip):
@@ -49,16 +54,25 @@ class K3sNode:
         self.ssh.sudo_command("update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy")
 
     def install_required_modules(self, verbose = True):
-        print("\tInstalling missing Ubuntu kernel packages for raspberry.")
+        print("\tInstalling missing Ubuntu kernel packages for raspberry (takes up to 10 minutes).")
         # Don't really need to check if these are already installed.
         # If so, the package will just get skipped so we're fine.
         # -y to skip prompt if one wants to install the package
         # Takes some noticable time (~6 minutes) to complete.
         streams = self.ssh.sudo_command("apt install -y linux-modules-extra-raspi")
+
+        time.sleep(8 * 60)
+        streams[0].write("\n")
+        streams[0].flush()
+
         # Blocking until the command is completed
         for line in streams[1].readlines():
             if verbose:
                 print(line)
+        # while True:
+        #     print(streams[1].read())
+        #     if streams[1].channel.exit_status_ready():
+        #         break
 
     def reboot_and_reconnect(self):
         # self.ssh.sudo_command("reboot")
