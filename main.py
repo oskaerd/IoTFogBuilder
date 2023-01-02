@@ -23,14 +23,17 @@ class K3sRpiConfigurator:
             # TODO move to some class or single method
             # Phase 1: OS preparation phase - installing required modules
             #          and applying settings.
-            node.overwrite_firmware_config_files()
-            node.set_ip_tables()
-            node.install_required_modules()
-            # Phase 2: K3s configuration file and download
-            node.prepare_k3s_config_file()
-            node.install_k3s()
-            node.write_final_k3s_config_file()
+            # node.overwrite_firmware_config_files()
+            # node.set_ip_tables()
+            # node.install_required_modules()
+            # # Phase 2: K3s configuration file and download
+            # node.prepare_k3s_config_file()
+            # node.install_k3s()
+            # node.write_final_k3s_config_file()
             # Phase 3: Rancher configuration
+            node.helm_install_with_repositories()
+            node.create_rancher_namespaces()
+            node.install_cert_manager()
             print(f"\tFinished configuration of node {node.node_name}:{node.ip}")
         print("Finished configuration of all the nodes from the JSON file that were connected.")
 
