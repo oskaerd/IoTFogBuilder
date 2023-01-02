@@ -1,4 +1,5 @@
 {
+    "_comment": "This file is example-only, one can refere to it creating own file",
     "machines": [
         {
             "username": "rpi",
