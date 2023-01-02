@@ -58,7 +58,11 @@ class K3sNode:
         # Don't really need to check if these are already installed.
         # If so, the package will just get skipped so we're fine.
         # -y to skip prompt if one wants to install the package
-        # Takes some noticable time (~6 minutes) to complete.
+        # curl usually is installed on RPis but make sure for other platforms:
+        streams = self.ssh.sudo_command("apt install -y curl")
+        streams[1].readlines()
+
+        # Below takes some noticable time (~6 minutes) to complete.
         # DEBIAN_FRONTEND=noninteractive - disables interactive prompt for the reset. Since the prompt is visual
         # it causes the tool to hang for stdout flush despite module getting installed.
         streams = self.ssh.sudo_command("DEBIAN_FRONTEND=noninteractive apt install -y linux-modules-extra-raspi")
@@ -124,7 +128,7 @@ class K3sControllerNode(K3sNode):
         print('\tInstalling K3s on the controller node.')
         # TODO: 1.2.4 Version is hardcoded, parametrize it later on:
         streams = self.ssh.sudo_command("curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=\"v1.24.9+k3s1\" K3S_KUBECONFIG_MODE=\"644\" sh -s -")
-        streams[1].readlines()
+        print(streams[1].readlines())
 
     def write_final_k3s_config_file(self):
         print("\tCopying k3s.yaml to config directory and setting node's IP address.")
