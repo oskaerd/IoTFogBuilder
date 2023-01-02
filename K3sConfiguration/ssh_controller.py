@@ -4,7 +4,7 @@ import time
 
 
 class NodeSshController:
-    def __init__(self, ip, password = "rpi"):
+    def __init__(self, ip, username = "rpi", password = "rpi"):
         print("Initializing SSH controller...")
         self.ip = ip
         self.password = password
@@ -13,7 +13,7 @@ class NodeSshController:
         try:
             self.ssh = paramiko.SSHClient()
             self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            self.ssh.connect(ip, username="rpi", password=password)
+            self.ssh.connect(ip, username=username, password=password)
         except paramiko.ssh_exception.NoValidConnectionsError:
             print(f"\tWARNING: Could not connect to the host {self.ip} - will be skipped")
             self.ssh = None

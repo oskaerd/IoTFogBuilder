@@ -14,7 +14,7 @@ class K3sNode:
 
         # SSH connection
         print(f"\tConnecting to target node {ip}")
-        self.ssh = NodeSshController(ip)
+        self.ssh = NodeSshController(ip, username)
         if self.ssh is None:
             self.connection_failed = True
 
@@ -167,11 +167,11 @@ class K3sControllerNode(K3sNode):
             "helm install cert-manager jetstack/cert-manager --namespace cert-manager",
             "kubectl get pods --namespace cert-manager"
         ]
-        print("\tInstalling cert manager: ")
+        print("\tInstalling cert manager:", end='')
         for cmd in commands:
             streams = self.ssh.command(cmd)
             result = streams[1].readlines()
-        print("Done.")
+        print(" Done.")
 
     def __str__(self):
         return f"IP: {self.ip}, name: {self.node_name} - controller"

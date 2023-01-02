@@ -27,9 +27,9 @@ class K3sRpiConfigurator:
             # node.set_ip_tables()
             # node.install_required_modules()
             # # Phase 2: K3s configuration file and download
-            # node.prepare_k3s_config_file()
-            # node.install_k3s()
-            # node.write_final_k3s_config_file()
+            node.prepare_k3s_config_file()
+            node.install_k3s()
+            node.write_final_k3s_config_file()
             # Phase 3: Rancher configuration
             node.helm_install_with_repositories()
             node.create_rancher_namespaces()
