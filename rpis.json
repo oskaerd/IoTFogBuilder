@@ -3,7 +3,7 @@
         {
             "username": "rpi",
             "node_name": "main",
-            "ip": "192.168.0.23",
+            "ip": "192.168.0.22",
             "is_controller": 1
         },
         {

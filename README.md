@@ -39,3 +39,7 @@ It's empty at this point, its content will be copied over after K3s installation
 ### 5. Install linux-modes-extra-raspi module:
 - sudo apt install linux-modes-extra-raspi
 - reboot, the tool shall reconnect (still TODO)
+
+## K3s configuration and download
+
+## Rancher configuration and download

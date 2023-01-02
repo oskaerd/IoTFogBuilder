@@ -31,7 +31,7 @@ class K3sNode:
         ]
 
         for file_tuple in file_tuples:
-            print(f"\tModifying {config_files_dir}/{file_tuple[0]}")
+            print(f"\tModifying {config_files_dir}/{file_tuple[0]}", end='')
             # check if flags have not been already set in the file:
             streams = self.ssh.command(f"grep \'{file_tuple[1]}\' {config_files_dir}/{file_tuple[0]}")
             if streams[1].read().decode('utf-8') == '':
@@ -40,6 +40,7 @@ class K3sNode:
                 streams = self.ssh.sudo_command(f"mv {file_tuple[0]} {config_files_dir}")
                 # This read is needed for file to be moved.
                 streams[1].read().decode('utf-8')
+                print(' Done')
             else:
                 print(f"Flags already present. Skipping.")
 
@@ -48,27 +49,32 @@ class K3sNode:
         pass
 
     def set_ip_tables(self):
-        print("\tConfiguring legacy IP tables.")
+        print("\tConfiguring legacy IP tables.", end='')
         self.ssh.sudo_command("iptables -F")
         self.ssh.sudo_command("update-alternatives --set iptables /usr/sbin/iptables-legacy")
         self.ssh.sudo_command("update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy")
+        print(' Done.')
 
-    def install_required_modules(self, verbose = True):
-        print("\tInstalling missing Ubuntu kernel packages for raspberry (takes up to 10 minutes).")
+    def install_required_modules(self, verbose = False):
+        print("\tInstalling missing Ubuntu kernel packages for raspberry (takes up to 10 minutes).", end='')
         # Don't really need to check if these are already installed.
         # If so, the package will just get skipped so we're fine.
         # -y to skip prompt if one wants to install the package
         # Takes some noticable time (~6 minutes) to complete.
-        streams = self.ssh.sudo_command("apt install -y linux-modules-extra-raspi")
-
-        time.sleep(8 * 60)
-        streams[0].write("\n")
-        streams[0].flush()
+        # DEBIAN_FRONTEND=noninteractive - disables interactive prompt for the reset. Since the prompt is visual
+        # it causes the tool to hang for stdout flush despite module getting installed.
+        streams = self.ssh.sudo_command("DEBIAN_FRONTEND=noninteractive apt install -y linux-modules-extra-raspi")
 
         # Blocking until the command is completed
         for line in streams[1].readlines():
+            # Not recommended to go verbose here, once the lines got flushed
+            # python shell hang and became non-responsive.
+            # TODO: check
             if verbose:
-                print(line)
+                print(line, end='')
+
+        if not verbose:
+            print(' Done.')
         # while True:
         #     print(streams[1].read())
         #     if streams[1].channel.exit_status_ready():
