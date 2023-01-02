@@ -127,7 +127,7 @@ class K3sControllerNode(K3sNode):
 
     def write_final_k3s_config_file(self):
         self.ssh.command(f"cp /etc/rancher/k3s/k3s.yaml /home/{self.username}/.kube/config")
-        # TODO sed ip
+        self.ssh.command(f"sed -i -r \'s/(\\b[0-9]{{1,3}}\\.){{3}}[0-9]{{1,3}}\\b\'/{self.ip}/ /home/{self.username}/.kube/config")
 
     def __str__(self):
         return f"IP: {self.ip}, name: {self.node_name} - controller"
