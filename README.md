@@ -1,5 +1,9 @@
 Python utility to configure RPi with freshly flashed SD card to work as an K3s node.
 
+# Notes to the input JSON file:
+1. The controller node should be listed as the first one so its key is known for the workers.
+2. There should be no more than one controller in the JSON. Otherwise only one will be used or the tool will end up creating more clusters depending on the order in the file.
+
 # Instructions for preparing the raspberry for K3s cluster:
 Each of the following paragraphs is considered a phase in the setup process.
 First one is extracted bacause it requires a reboot and additional handling of
@@ -18,7 +22,7 @@ In the software pick:
     - enable ssh
     - provide WLAN credentials if wireless connection is required
         - do not set WiFi credentials for modules that do not support wireless connection. There were problems connecting with wired connection on Raspberry Pi 2 if these were set.
-- Set username and password. Recommendation is to default to some common password and change it after the setup.
+- Set username and password. Assumption is to default to some common password across the nodes and change it after the setup.
 - Write SD card
 
 ### 2. Modify firmware configuration files:

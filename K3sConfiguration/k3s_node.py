@@ -5,7 +5,6 @@ from abc import ABC, abstractmethod
 
 
 
-
 class K3sNode:
     def __init__(self, username, node_name, ip):
         self.node_name = node_name
@@ -40,9 +39,9 @@ class K3sNode:
                 streams = self.ssh.sudo_command(f"mv {file_tuple[0]} {config_files_dir}")
                 # This read is needed for file to be moved.
                 streams[1].read().decode('utf-8')
-                print(' Done')
+                print('. Done')
             else:
-                print(f"Flags already present. Skipping.")
+                print(f" - flags already present. Skipping.")
 
     def prepare_k3s_config_file(self):
         # Not applicable for the worker node.
@@ -53,10 +52,9 @@ class K3sNode:
         self.ssh.sudo_command("iptables -F")
         self.ssh.sudo_command("update-alternatives --set iptables /usr/sbin/iptables-legacy")
         self.ssh.sudo_command("update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy")
-        print(' Done.')
+        print(" Done.\n\tInstalling missing Ubuntu kernel packages for raspberry (takes up to 10 minutes).")
 
     def install_required_modules(self, verbose = False):
-        print("\tInstalling missing Ubuntu kernel packages for raspberry (takes up to 10 minutes).", end='')
         # Don't really need to check if these are already installed.
         # If so, the package will just get skipped so we're fine.
         # -y to skip prompt if one wants to install the package
@@ -69,21 +67,37 @@ class K3sNode:
         for line in streams[1].readlines():
             # Not recommended to go verbose here, once the lines got flushed
             # python shell hang and became non-responsive.
-            # TODO: check
+            # TODO: remove, leave just readlines
             if verbose:
                 print(line, end='')
 
         if not verbose:
-            print(' Done.')
-        # while True:
-        #     print(streams[1].read())
-        #     if streams[1].channel.exit_status_ready():
-        #         break
+            print('\tDone. \n\tRebooting.')
+        self.reboot_and_reconnect()
 
     def reboot_and_reconnect(self):
-        # self.ssh.sudo_command("reboot")
-        # TODO how to reconnect?
+        reconnected = False
+        streams = self.ssh.sudo_command("reboot")
+        # TODO method for that
+        try:
+            streams[1].readlines()
+            reconnected = True
+        except:
+            print(f"Lost connection to the device {self.rpi}")
+            self.ssh.ssh.close()
+
+        # some delay for RPi to reboot
+        time.sleep(60)
+        if reconnected:
+            print('\tReconnected')
+        # TODO method for that
+        self.ssh.ssh.connect(self.ip, username="rpi", password="rpi")
+
+    def install_k3s(self):
         pass
+
+    def write_final_k3s_config_file(self):
+        print('TODO')
 
     def get_controller_key(self):
         # TODO: This needs to reach out to K3sRpiConfigurator to get the controller key
@@ -99,11 +113,27 @@ class K3sControllerNode(K3sNode):
         super().__init__(username, node_name, ip)
 
     def prepare_k3s_config_file(self):
-        print("\tPreparing K3s config directory and file.")
+        print("\tPreparing K3s config directory and files.")
         self.ssh.command("mkdir .kube")
-        self.ssh.command("touch .kube/config")
         # Append export of K3s config path to the .bashrc file.
         self.ssh.command(f"echo \"export KUBECONFIG=/home/{self.username}/.kube/config\" >> ~/.bashrc")
+        # TODO: check if it's needed
+        # Source to have the variable available in current session
+        self.ssh.command("source ~/.bashrc")
+        self.ssh.command("touch hi")
+
+    def install_k3s(self):
+        print('\tInstalling K3s on the controller node.')
+        streams = self.ssh.sudo_command("curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE=\"644\" sh -s -")
+        streams[1].readlines()
+        self.ssh.command("touch hello")
+
+    def write_final_k3s_config_file(self):
+        streams = self.ssh.command("cp /etc/rancher/k3s/k3s.yaml $KUBECONFIG")
+        print(streams[1].readlines())
+        print(streams[2].readlines())
+        self.ssh.command("touch bb")
+        # TODO sed ip
 
     def __str__(self):
         return f"IP: {self.ip}, name: {self.node_name} - controller"

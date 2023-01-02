@@ -3,14 +3,16 @@
         {
             "username": "rpi",
             "node_name": "main",
-            "ip": "192.168.0.22",
-            "is_controller": 1
+            "ip": "192.168.0.29",
+            "is_controller": 1,
+            "phases": [1, 2, 3]
         },
         {
             "username": "rpi",
             "node_name": "client-rpi2",
             "ip": "192.168.0.205",
-            "is_controller": 0
+            "is_controller": 0,
+            "phases": [1, 2, 3]
         }
     ]
 }
