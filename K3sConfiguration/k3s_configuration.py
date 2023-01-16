@@ -1,5 +1,6 @@
 from .k3s_node import K3sControllerNode, K3sNode
 
+
 class K3sControllerFactory:
     def __init__(self, json_data):
         if json_data['is_controller']:

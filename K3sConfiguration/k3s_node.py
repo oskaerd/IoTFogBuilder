@@ -135,48 +135,6 @@ class K3sControllerNode(K3sNode):
         self.ssh.command(f"cp /etc/rancher/k3s/k3s.yaml /home/{self.username}/.kube/config")
         self.ssh.command(f"sed -i -r \'s/(\\b[0-9]{{1,3}}\\.){{3}}[0-9]{{1,3}}\\b\'/{self.ip}/ /home/{self.username}/.kube/config")
 
-    def helm_install_with_repositories(self):
-        repo_commands = [
-            "add rancher-latest https://releases.rancher.com/server-charts/latest",
-            "add jetstack https://charts.jetstack.io",
-            "update"
-        ]
-        print("\tInstalling helm and required repositories:", end='')
-        streams = self.ssh.sudo_command("curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash")
-        streams[1].readlines()
-
-        for cmd in repo_commands:
-            streams = self.ssh.command(f"helm repo {cmd}")
-            streams[1].readlines()
-
-        print(' Done.')
-
-    def create_rancher_namespaces(self):
-        rancher_namespaces = [
-            "cattle-system",
-            "cert-manager"
-        ]
-
-        print("\tCreating rancher namespaces.", end='')
-
-        for ns in rancher_namespaces:
-            streams = self.ssh.command(f"kubectl create namespace {ns}")
-            streams[1].readlines()
-
-        print(' Done')
-
-    def install_cert_manager(self):
-        commands = [
-            "kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.2.0-alpha.2/cert-manager.crds.yaml",
-            "helm install cert-manager jetstack/cert-manager --namespace cert-manager",
-            "kubectl get pods --namespace cert-manager"
-        ]
-        print("\tInstalling cert manager:", end='')
-        for cmd in commands:
-            streams = self.ssh.command(cmd)
-            result = streams[1].readlines()
-        print(" Done.")
-
     def __str__(self):
         return f"IP: {self.ip}, name: {self.node_name} - controller"
 
