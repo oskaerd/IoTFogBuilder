@@ -6,17 +6,21 @@ from abc import ABC, abstractmethod
 
 
 class K3sNode:
-    def __init__(self, username, node_name, ip):
+    def __init__(self, username, node_name, ip, phases):
         self.node_name = node_name
         self.ip = ip
         self.username = username
         self.connection_failed = False
+        self.phases = phases
 
         # SSH connection
         print(f"\tConnecting to target node {ip}")
         self.ssh = NodeSshController(ip, username)
         if self.ssh is None:
             self.connection_failed = True
+
+    def run_current_phase(self, phase):
+        return phase in self.phases
 
     def overwrite_firmware_config_files(self, config_files_dir = '/boot/firmware'):
         print("\tAppending required flags to config files.")
@@ -68,15 +72,10 @@ class K3sNode:
         streams = self.ssh.sudo_command("DEBIAN_FRONTEND=noninteractive apt install -y linux-modules-extra-raspi")
 
         # Blocking until the command is completed
-        for line in streams[1].readlines():
-            # Not recommended to go verbose here, once the lines got flushed
-            # python shell hang and became non-responsive.
-            # TODO: remove, leave just readlines
-            if verbose:
-                print(line, end='')
+        streams[1].readlines()
 
-        if not verbose:
-            print('\tDone. \n\tRebooting.')
+        print('\tDone. \n\tRebooting.')
+
         self.reboot_and_reconnect()
 
     def reboot_and_reconnect(self):
@@ -88,14 +87,14 @@ class K3sNode:
             reconnected = True
         except:
             print(f"Lost connection to the device {self.rpi}")
-            self.ssh.ssh.close()
+            self.ssh._ssh.close()
 
         # some delay for RPi to reboot
         time.sleep(60)
         if reconnected:
             print('\tReconnected')
         # TODO method for that
-        self.ssh.ssh.connect(self.ip, username="rpi", password="rpi")
+        self.ssh._ssh.connect(self.ip, username="rpi", password="rpi")
 
     def install_k3s(self):
         pass
@@ -113,8 +112,8 @@ class K3sNode:
 
 
 class K3sControllerNode(K3sNode):
-    def __init__(self, username, node_name, ip):
-        super().__init__(username, node_name, ip)
+    def __init__(self, username, node_name, ip, phases):
+        super().__init__(username, node_name, ip, phases)
 
     def prepare_k3s_config_file(self):
         print("\tPreparing K3s config directory and files.")
