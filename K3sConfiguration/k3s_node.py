@@ -38,8 +38,6 @@ class K3sNode:
                 self.ssh.command(f"cp {config_files_dir}/{file_tuple[0]} .")
                 self.ssh.command(f"{file_tuple[2]}")
                 streams = self.ssh.sudo_command(f"mv {file_tuple[0]} {config_files_dir}")
-                # This read is needed for file to be moved.
-                streams[1].read().decode('utf-8')
                 print('. Done')
             else:
                 print(f" - flags already present. Skipping.")
@@ -60,30 +58,24 @@ class K3sNode:
         # If so, the package will just get skipped so we're fine.
         # -y to skip prompt if one wants to install the package
         # curl usually is installed on RPis but make sure for other platforms:
-        # streams = self.ssh.sudo_command("apt install -y curl")
-        # streams[1].readlines()
+        self.ssh.sudo_command("apt install -y curl")
 
-        # # Below takes some noticable time (~6 minutes) to complete.
-        # # DEBIAN_FRONTEND=noninteractive - disables interactive prompt for the reset. Since the prompt is visual
-        # # it causes the tool to hang for stdout flush despite module getting installed.
-        # streams = self.ssh.sudo_command("DEBIAN_FRONTEND=noninteractive apt install -y linux-modules-extra-raspi")
-
-        # # Blocking until the command is completed
-        # streams[1].readlines()
+        # Below takes some noticable time (~6 minutes) to complete.
+        # DEBIAN_FRONTEND=noninteractive - disables interactive prompt for the reset. Since the prompt is visual
+        # it causes the tool to hang for stdout flush despite module getting installed.
+        self.ssh.sudo_command("DEBIAN_FRONTEND=noninteractive apt install -y linux-modules-extra-raspi")
 
         print('\tDone. \n\tRebooting.')
 
         self.reboot_and_reconnect()
 
-        self.ssh.command("touch hiii")
-
     def reboot_and_reconnect(self):
         self.ssh.sudo_command("reboot")
 
-        # close the connection and give rpi some time for reboot
+        # close the connection and give rpi some time for reboot. Then restore connection.
+        self.ssh._ssh.close()
         time.sleep(50)
-
-        #self.ssh._ssh.connect(self.ip, username="rpi", password="rpi")
+        self.ssh._ssh.connect(self.ip, username="rpi", password="rpi")
 
     def install_k3s(self):
         pass

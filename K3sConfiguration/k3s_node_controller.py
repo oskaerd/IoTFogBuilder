@@ -16,8 +16,7 @@ class K3sControllerNode(K3sNode):
     def install_k3s(self):
         print('\tInstalling K3s on the controller node.')
         # TODO: 1.2.4 Version is hardcoded, parametrize it later on:
-        streams = self.ssh.sudo_command("curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=\"v1.24.9+k3s1\" K3S_KUBECONFIG_MODE=\"644\" sh -s -")
-        print(streams[1].readlines())
+        self.ssh.sudo_command("curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=\"v1.24.9+k3s1\" K3S_KUBECONFIG_MODE=\"644\" sh -s -")
 
     def write_final_k3s_config_file(self):
         print("\tCopying k3s.yaml to config directory and setting node's IP address.")

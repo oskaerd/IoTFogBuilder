@@ -21,13 +21,16 @@ class NodeSshController:
             return
 
     def sudo_command(self, command):
-        streams = self._ssh.exec_command(f"sudo {command}", get_pty=True)
+        stdin, stdout, stderr = self._ssh.exec_command(f"sudo {command}", get_pty=True)
         # Small delay for password prompt to appear:
         time.sleep(1)
-        streams[0].write(f"rpi\n")
-        streams[0].flush()
+        stdin.write(f"rpi\n")
+        stdin.flush()
 
-        return streams
+        # Blocking and waiting for command output so we know it has completed.
+        stdout.readlines()
+
+        return (stdin, stdout, stderr)
 
     def command(self, command):
         return self._ssh.exec_command(command)

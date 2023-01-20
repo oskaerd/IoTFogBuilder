@@ -24,8 +24,8 @@ class K3sRpiConfigurator:
             # Phase 1: OS preparation phase - installing required modules
             #          and applying settings.
             if node.run_current_phase(1):
-                #node.overwrite_firmware_config_files()
-                #node.set_ip_tables()
+                node.overwrite_firmware_config_files()
+                node.set_ip_tables()
                 node.install_required_modules()
             # Phase 2: K3s configuration file and download
             if node.run_current_phase(2):
