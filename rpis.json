@@ -1,10 +1,11 @@
 {
     "_comment": "This file is example-only, one can refere to it creating own file",
+    "k3s_version": "v1.24.9+k3s1",
     "machines": [
         {
             "username": "rpi",
             "node_name": "main",
-            "ip": "192.168.0.21",
+            "ip": "192.168.0.22",
             "is_controller": 1,
             "phases": [1, 2]
         },

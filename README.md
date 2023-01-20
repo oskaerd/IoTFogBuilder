@@ -39,7 +39,7 @@ In the software pick:
 - sudo apt install linux-modes-extra-raspi
 - reboot, the tool shall reconnect on its own
 
-## K3s configuration and download
+## K3s configuration and download phase
 ### 1. Prepare config directory and export its location:
 - mkdir ~/.kube
 - echo "export KUBECONFIG=/home/{username}/.kube/config" >> ~/.bashrc

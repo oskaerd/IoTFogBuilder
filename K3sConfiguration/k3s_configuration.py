@@ -18,7 +18,6 @@ class K3sControllerFactory:
         phases = json_data['phases']
         self.k3s = k3s_class(username, name, ip, phases)
 
-
     def get_node(self):
         return self.k3s
 

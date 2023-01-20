@@ -16,6 +16,9 @@ class K3sNode:
         if self.ssh is None:
             self.connection_failed = True
 
+    def did_connection_fail(self):
+        return self.connection_failed
+
     def run_current_phase(self, phase):
         return phase in self.phases
 
