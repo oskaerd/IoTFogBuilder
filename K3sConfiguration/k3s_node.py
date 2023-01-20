@@ -19,7 +19,7 @@ class K3sNode:
     def did_connection_fail(self):
         return self.connection_failed
 
-    def run_current_phase(self, phase):
+    def check_if_running_current_phase(self, phase):
         return phase in self.phases
 
     def overwrite_firmware_config_files(self, config_files_dir = '/boot/firmware'):
@@ -38,9 +38,11 @@ class K3sNode:
             # check if flags have not been already set in the file:
             streams = self.ssh.command(f"grep \'{file_tuple[1]}\' {config_files_dir}/{file_tuple[0]}")
             if streams[1].read().decode('utf-8') == '':
+                # copy over the file to current working directory, modify and put back
+                # easier than cd there and modifying in place
                 self.ssh.command(f"cp {config_files_dir}/{file_tuple[0]} .")
                 self.ssh.command(f"{file_tuple[2]}")
-                streams = self.ssh.sudo_command(f"mv {file_tuple[0]} {config_files_dir}")
+                self.ssh.sudo_command(f"mv {file_tuple[0]} {config_files_dir}")
                 print('. Done')
             else:
                 print(f" - flags already present. Skipping.")

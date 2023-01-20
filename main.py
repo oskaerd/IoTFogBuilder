@@ -6,6 +6,7 @@ class K3sRpiConfigurator:
     def __init__(self, json_file):
         # Keep the nodes in a list:
         self.nodes = []
+        self.controller_key = None
 
         # Get the configurations from the JSON file:
         with open(json_file) as jf:
@@ -26,16 +27,24 @@ class K3sRpiConfigurator:
             print(f"\tStarting configuration of node {node.node_name}:{node.ip}")
             # Phase 1: OS preparation phase - installing required modules
             #          and applying settings.
-            if node.run_current_phase(1):
-                node.overwrite_firmware_config_files()
-                node.set_ip_tables()
-                node.install_required_modules()
+            if node.check_if_running_current_phase(1):
+                # node.overwrite_firmware_config_files()
+                # node.set_ip_tables()
+                # node.install_required_modules()
+                pass
 
             # Phase 2: K3s configuration file and download
-            if node.run_current_phase(2):
-                node.prepare_k3s_config_file()
-                node.install_k3s(self.k3s_install_version)
-                node.write_final_k3s_config_file()
+            if node.check_if_running_current_phase(2):
+                # node.prepare_k3s_config_file()
+                # node.install_k3s(self.k3s_install_version)
+                # node.write_final_k3s_config_file()
+                # Get the token from the controller or pass it to the node:
+                if self.controller_key is None:
+                    self.controller_key = node.get_controller_key(None)
+                    print(self.controller_key)
+                else:
+                    node.get_controller_key(self.controller_key)
+                
             print(f"\tFinished configuration of node {node.node_name}:{node.ip}")
         print("Finished configuration of all the nodes from the JSON file that were connected.")
 

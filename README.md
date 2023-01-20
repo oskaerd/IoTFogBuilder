@@ -1,9 +1,9 @@
 Python utility to configure RPi with freshly flashed SD card to work as an K3s node.
-Numerous streams[1].readlines() are waiting for data to flush. streams[1] is stdout.
 
 # Notes to the input JSON file:
 1. The controller node should be listed as the first one so its key is known for the workers.
-2. There should be no more than one controller in the JSON. Otherwise only one will be used or the tool will end up creating more clusters depending on the order in the file.
+2. There should be no more than one controller in the JSON. Otherwise further controllers
+will be used and the tool will end up creating more clusters depending on the order in the file.
 
 # Instructions for preparing the raspberry for K3s cluster:
 Each of the following paragraphs is considered a phase in the setup process.
@@ -43,11 +43,21 @@ In the software pick:
 ### 1. Prepare config directory and export its location:
 - mkdir ~/.kube
 - echo "export KUBECONFIG=/home/{username}/.kube/config" >> ~/.bashrc
-### 2. Download K3s
-1. Controller (TODO parametrize version):
-- curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=\"v1.24.9+k3s1\" K3S_KUBECONFIG_MODE=\"644\" sh -s -
+### 2. Download and install K3s
+1. 
+    a.Controller:
+        - curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="k3s-version-from-json" K3S_KUBECONFIG_MODE="644" sh -s -
+        - get the node token from controller node:
+            sudo cat /var/lib/rancher/k3s/server/node-token
 
-### 3. Copy and modify the config file with controller IP:
+    b. Worker:
+        - curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="k3s-version-from-json" K3S_TOKEN="CONTROLLER_TOKEN" K3S_URL="https://[controller ip]:6443" K3S_NODE_NAME="servername" sh -
+
+K3s version is parametrized in the JSON and mandatory to provide. The format is version string as in the K3s repository:
+https://github.com/k3s-io/k3s/releases
+Example: v1.24.9+k3s1
+
+### 3. Copy and modify the config file for controller IP:
 - cp /etc/rancher/k3s/k3s.yaml /home/{username}/.kube/config
 - sed the IP
 

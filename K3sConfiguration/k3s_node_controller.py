@@ -24,8 +24,9 @@ class K3sControllerNode(K3sNode):
         # sed the localhost IP address (127.0.0.1) and replace with the controller IP
         self.ssh.command(f"sed -i -r \'s/(\\b[0-9]{{1,3}}\\.){{3}}[0-9]{{1,3}}\\b\'/{self.ip}/ /home/{self.username}/.kube/config")
 
+    def get_controller_key(self, controller_key):
+        controller_key = self.ssh.sudo_command("cat /var/lib/rancher/k3s/server/node-token")[-1][:-1]
+        return controller_key
+
     def __str__(self):
         return f"IP: {self.ip}, name: {self.node_name} - controller"
-
-    def get_controller_key(self):
-        pass

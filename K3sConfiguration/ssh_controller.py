@@ -28,9 +28,9 @@ class NodeSshController:
         stdin.flush()
 
         # Blocking and waiting for command output so we know it has completed.
-        stdout.readlines()
+        result = stdout.readlines()
 
-        return (stdin, stdout, stderr)
+        return result
 
     def command(self, command):
         return self._ssh.exec_command(command)
