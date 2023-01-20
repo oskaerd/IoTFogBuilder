@@ -71,11 +71,8 @@ class K3sNode:
 
     def reboot_and_reconnect(self):
         self.ssh.sudo_command("reboot")
-
-        # close the connection and give rpi some time for reboot. Then restore connection.
-        self.ssh._ssh.close()
-        time.sleep(50)
-        self.ssh._ssh.connect(self.ip, username="rpi", password="rpi")
+        # Provide some idle delay for raspberry to reboot:
+        self.ssh.reconnect(delay=50)
 
     def install_k3s(self):
         pass

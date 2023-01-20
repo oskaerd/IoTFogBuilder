@@ -35,6 +35,12 @@ class NodeSshController:
     def command(self, command):
         return self._ssh.exec_command(command)
 
+    def reconnect(self, delay):
+        # close the connection and give rpi some time for reboot. Then restore connection.
+        self._ssh.close()
+        time.sleep(delay)
+        self._ssh.connect(self.ip, username=self.username, password=self.password)
+
     def __del__(self):
         if self._ssh is None:
             return
