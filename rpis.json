@@ -4,9 +4,9 @@
         {
             "username": "rpi",
             "node_name": "main",
-            "ip": "192.168.0.20",
+            "ip": "192.168.0.21",
             "is_controller": 1,
-            "phases": [2]
+            "phases": [1]
         },
         {
             "username": "rpi",

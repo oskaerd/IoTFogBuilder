@@ -1,4 +1,5 @@
-from .k3s_node import K3sControllerNode, K3sNode
+from .k3s_node import K3sNode
+from .k3s_node_controller import K3sControllerNode
 
 
 class K3sControllerFactory:

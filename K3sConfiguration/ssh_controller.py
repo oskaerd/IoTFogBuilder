@@ -8,6 +8,7 @@ class NodeSshController:
         print("Initializing SSH controller...")
         self.ip = ip
         self.password = password
+        self.username = username
 
         # SSH connection
         try:
