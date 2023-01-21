@@ -13,7 +13,7 @@ class K3sControllerNode(K3sNode):
         # Source to have the variable available in current session
         self.ssh.command("source ~/.bashrc")
 
-    def install_k3s(self, k3s_version):
+    def install_k3s(self, k3s_version, controller_ip, controller_token):
         print('\tInstalling K3s on the controller node.')
         self.ssh.sudo_command(f"curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=\"{k3s_version}\" K3S_KUBECONFIG_MODE=\"644\" sh -s -")
 
@@ -24,9 +24,12 @@ class K3sControllerNode(K3sNode):
         # sed the localhost IP address (127.0.0.1) and replace with the controller IP
         self.ssh.command(f"sed -i -r \'s/(\\b[0-9]{{1,3}}\\.){{3}}[0-9]{{1,3}}\\b\'/{self.ip}/ /home/{self.username}/.kube/config")
 
-    def get_controller_key(self, controller_key):
-        controller_key = self.ssh.sudo_command("cat /var/lib/rancher/k3s/server/node-token")[-1][:-1]
-        return controller_key
+    def get_controller_token(self, controller_token):
+        controller_token = self.ssh.sudo_command("cat /var/lib/rancher/k3s/server/node-token")[-1][:-1]
+        return controller_token
+
+    def get_controller_ip(self):
+        return self.ip
 
     def __str__(self):
         return f"IP: {self.ip}, name: {self.node_name} - controller"

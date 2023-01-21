@@ -13,7 +13,7 @@ class K3sNode:
         # SSH connection
         print(f"\tConnecting to target node {ip}")
         self.ssh = NodeSshController(ip, username)
-        if self.ssh is None:
+        if not self.ssh.get_connection_successful():
             self.connection_failed = True
 
     def did_connection_fail(self):
@@ -35,7 +35,7 @@ class K3sNode:
 
         for file_tuple in file_tuples:
             print(f"\tModifying {config_files_dir}/{file_tuple[0]}", end='')
-            # check if flags have not been already set in the file:
+            # check stdout if flags have not been already set in the file:
             streams = self.ssh.command(f"grep \'{file_tuple[1]}\' {config_files_dir}/{file_tuple[0]}")
             if streams[1].read().decode('utf-8') == '':
                 # copy over the file to current working directory, modify and put back
@@ -77,16 +77,18 @@ class K3sNode:
     def reboot_and_reconnect(self):
         self.ssh.sudo_command("reboot")
         # Provide some idle delay for raspberry to reboot:
-        self.ssh.reconnect(delay=50)
+        # TODO remove later: 90 seconds for RPi 2, for newer can be lower (50 for 3B+)
+        self.ssh.reconnect(delay=100)
 
-    def install_k3s(self):
-        pass
+    def install_k3s(self, k3s_version, controller_ip, controller_token):
+        print('\tInstalling K3s on the worker node.')
+        self.ssh.sudo_command(f"curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=\"{k3s_version}\" K3S_TOKEN=\"{controller_token}\" K3S_URL=\"https://{controller_ip}:6443\" K3S_NODE_NAME=\"{self.node_name}\" sh -")
 
     def write_final_k3s_config_file(self):
-        print('TODO')
+        pass
 
-    def get_controller_key(self):
-        # TODO: This needs to reach out to K3sRpiConfigurator to get the controller key
+    def get_controller_token(self):
+        # TODO: This needs to reach out to K3sRpiConfigurator to get the controller key. Should be some observer or sth
         pass
 
     def __str__(self):

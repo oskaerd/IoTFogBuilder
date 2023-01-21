@@ -51,7 +51,7 @@ In the software pick:
             sudo cat /var/lib/rancher/k3s/server/node-token
 
     b. Worker:
-        - curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="k3s-version-from-json" K3S_TOKEN="CONTROLLER_TOKEN" K3S_URL="https://[controller ip]:6443" K3S_NODE_NAME="servername" sh -
+        - curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="k3s-version-from-json" K3S_TOKEN="CONTROLLER_TOKEN" K3S_URL="https://[controller ip]:6443" K3S_NODE_NAME="some-node-name" sh -
 
 K3s version is parametrized in the JSON and mandatory to provide. The format is version string as in the K3s repository:
 https://github.com/k3s-io/k3s/releases

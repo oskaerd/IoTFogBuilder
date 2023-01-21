@@ -9,6 +9,7 @@ class NodeSshController:
         self.ip = ip
         self.password = password
         self.username = username
+        self.status_ok = True
 
         # SSH connection
         try:
@@ -18,7 +19,10 @@ class NodeSshController:
         except paramiko.ssh_exception.NoValidConnectionsError:
             print(f"\tWARNING: Could not connect to the host {self.ip} - will be skipped")
             self._ssh = None
-            return
+            self.status_ok = False
+
+    def get_connection_successful(self):
+        return self.status_ok
 
     def sudo_command(self, command):
         stdin, stdout, stderr = self._ssh.exec_command(f"sudo {command}", get_pty=True)
@@ -40,6 +44,7 @@ class NodeSshController:
         self._ssh.close()
         time.sleep(delay)
         self._ssh.connect(self.ip, username=self.username, password=self.password)
+        print("Reconnected")
 
     def __del__(self):
         if self._ssh is None:
