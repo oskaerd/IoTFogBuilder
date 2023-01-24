@@ -5,14 +5,14 @@
         {
             "username": "rpi",
             "node_name": "main",
-            "ip": "192.168.0.24",
+            "ip": "192.168.0.111",
             "is_controller": 1,
             "phases": [1, 2]
         },
         {
             "username": "rpi",
             "node_name": "client-rpi2",
-            "ip": "192.168.0.208",
+            "ip": "192.168.0.112",
             "is_controller": 0,
             "phases": [1, 2]
         }

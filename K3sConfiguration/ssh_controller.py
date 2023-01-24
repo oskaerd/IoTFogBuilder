@@ -16,7 +16,7 @@ class NodeSshController:
             self._ssh = paramiko.SSHClient()
             self._ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             self._ssh.connect(ip, username=username, password=password)
-        except paramiko.ssh_exception.NoValidConnectionsError:
+        except (paramiko.ssh_exception.NoValidConnectionsError, TimeoutError):
             print(f"\tWARNING: Could not connect to the host {self.ip} - will be skipped")
             self._ssh = None
             self.status_ok = False
