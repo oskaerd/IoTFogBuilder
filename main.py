@@ -1,3 +1,4 @@
+import sys
 import json
 from K3sConfiguration import k3s_configuration as k3r
 
@@ -48,5 +49,5 @@ class K3sRpiConfigurator:
 
 
 if __name__ == "__main__":
-    configurator = K3sRpiConfigurator('rpis.json')
+    configurator = K3sRpiConfigurator(f'{sys.argv[1]}.json')
     configurator.configure_nodes()

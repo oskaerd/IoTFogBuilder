@@ -4,7 +4,7 @@ import time
 
 
 class NodeSshController:
-    def __init__(self, ip, username = "rpi", password = "raspberry"):
+    def __init__(self, ip, username, password = "wsb!@#$U"):
         print("Initializing SSH controller...")
         self.ip = ip
         self.password = password
@@ -24,12 +24,13 @@ class NodeSshController:
     def get_connection_successful(self):
         return self.status_ok
 
-    def sudo_command(self, command):
+    def sudo_command(self, command, bypass_sudo_password=False):
         stdin, stdout, stderr = self._ssh.exec_command(f"sudo {command}", get_pty=True)
         # Small delay for password prompt to appear:
         time.sleep(1)
-        stdin.write(f"{self.password}\n")
-        stdin.flush()
+        if not bypass_sudo_password:
+            stdin.write(f"{self.password}\n")
+            stdin.flush()
 
         # Blocking and waiting for command output so we know it has completed.
         result = stdout.readlines()
