@@ -1,5 +1,5 @@
 import json
-from .k3s_configuration import K3sControllerFactory
+from .k3s_controller_factory import K3sControllerFactory
 
 
 class K3sRpiConfigurator:
