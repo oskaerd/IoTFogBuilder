@@ -3,7 +3,7 @@ import time
 
 
 class K3sNode:
-    def __init__(self, username, node_name, ip, phases):
+    def __init__(self, username, node_name, ip, phases, password):
         self.node_name = node_name
         self.ip = ip
         self.username = username
@@ -12,7 +12,7 @@ class K3sNode:
 
         # SSH connection
         print(f"\tConnecting to target node {ip}")
-        self.ssh = NodeSshController(ip, username)
+        self.ssh = NodeSshController(ip, username, password)
         if not self.ssh.get_connection_successful():
             self.connection_failed = True
 

@@ -4,7 +4,7 @@ import time
 
 
 class NodeSshController:
-    def __init__(self, ip, username, password = "wsb!@#$U"):
+    def __init__(self, ip, username, password):
         print("Initializing SSH controller...")
         self.ip = ip
         self.password = password

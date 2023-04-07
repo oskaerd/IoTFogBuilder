@@ -4,7 +4,7 @@ from K3sConfiguration import k3s_configuration as k3r
 
 
 class K3sRpiConfigurator:
-    def __init__(self, json_file):
+    def __init__(self, json_file, password):
         # Keep the nodes in a list:
         self.nodes = []
         self.controller_token = None
@@ -16,7 +16,7 @@ class K3sRpiConfigurator:
             self.k3s_install_version = json_data['k3s_version']
 
             for rpi_config in json_data['machines']:
-                k3s = k3r.K3sControllerFactory(rpi_config).get_node()
+                k3s = k3r.K3sControllerFactory(rpi_config, password).get_node()
                 self.nodes.append(k3s)
 
     def configure_nodes(self):
@@ -49,5 +49,8 @@ class K3sRpiConfigurator:
 
 
 if __name__ == "__main__":
-    configurator = K3sRpiConfigurator(f'{sys.argv[1]}.json')
+    if len(sys.argv) < 3:
+        print("Run as: main.py config-file rpi-password")
+        sys.exit(1)
+    configurator = K3sRpiConfigurator(sys.argv[1], sys.argv[2])
     configurator.configure_nodes()

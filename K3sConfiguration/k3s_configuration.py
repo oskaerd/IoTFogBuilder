@@ -3,7 +3,7 @@ from .k3s_node_controller import K3sControllerNode
 
 
 class K3sControllerFactory:
-    def __init__(self, json_data):
+    def __init__(self, json_data, password):
         # Choose proper class:
         if json_data['is_controller']:
             print("Creating controller node.")
@@ -16,7 +16,7 @@ class K3sControllerFactory:
         name = json_data['node_name']
         username = json_data['username']
         phases = json_data['phases']
-        self.k3s = k3s_class(username, name, ip, phases)
+        self.k3s = k3s_class(username, name, ip, phases, password)
 
     def get_node(self):
         return self.k3s
