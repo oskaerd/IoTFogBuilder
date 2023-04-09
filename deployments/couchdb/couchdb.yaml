@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: couchdb-deployment
   labels:
@@ -31,6 +31,13 @@ spec:
             secretKeyRef:
               name: couchdb-secret
               key: couchdb-root-password
+        volumeMounts:
+            - name: couchdb-data
+              mountPath: /couchdb # Mount path for Kafka data
+      volumes:
+        - name: couchdb-data
+          emptyDir: {}
+
 ---
 apiVersion: v1
 kind: Service
