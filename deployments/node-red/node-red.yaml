@@ -14,7 +14,7 @@ spec:
     nodePort: 30001 # Port on the node to expose the service
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: nodered-deployment
   namespace: node-red
@@ -23,6 +23,7 @@ spec:
   selector:
     matchLabels:
       app: nodered
+  serviceName: "nodered-service"
   template:
     metadata:
       labels:

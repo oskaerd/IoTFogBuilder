@@ -1,3 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: couchdb-service
+  namespace: couchdb
+spec:
+  selector:
+    app: couchdb
+  ports:
+    - protocol: TCP
+      port: 5984
+      targetPort: 5984
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -10,6 +23,7 @@ spec:
   selector:
     matchLabels:
       app: couchdb
+  serviceName: "couchdb-service"
   template:
     metadata:
       labels:
@@ -37,18 +51,4 @@ spec:
       volumes:
         - name: couchdb-data
           emptyDir: {}
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: couchdb-service
-  namespace: couchdb
-spec:
-  selector:
-    app: couchdb
-  ports:
-    - protocol: TCP
-      port: 5984
-      targetPort: 5984
 
