@@ -31,6 +31,6 @@ if __name__ == '__main__':
     kafka_producer = connect_kafka_producer()
     for recipe in all_recipes:
         print("A")
-        publish_message(kafka_producer, 'purchases', 'raw', recipe.strip())
+        publish_message(kafka_producer, 'books', 'raw', recipe.strip())
     if kafka_producer is not None:
         kafka_producer.close()
