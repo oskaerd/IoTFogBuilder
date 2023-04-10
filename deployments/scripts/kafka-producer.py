@@ -19,7 +19,7 @@ def publish_message(producer_instance, topic_name, key, value):
 def connect_kafka_producer():
     _producer = None
     try:
-        _producer = KafkaProducer(bootstrap_servers=['192.168.0.100:9092'], api_version=(0, 10))
+        _producer = KafkaProducer(bootstrap_servers=['192.168.0.100:19092'], api_version=(0, 10))
     except Exception as ex:
         print('Exception while connecting Kafka')
         print(str(ex))
