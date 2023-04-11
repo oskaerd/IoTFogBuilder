@@ -2,6 +2,15 @@ from kafka import KafkaConsumer
 import time
 import sys
 
+# Kafka consumer. Connects to the proper cluster identified by the IP address and reads the messages from given topic.
+# Input arguments:
+#   - IP address
+#   - port that Kafka listens on for external connections
+#   - name of the topic to read from
+#
+# Example usage:
+#   python kafka-consumer.py 192.168.0.100 19092 books
+
 if __name__ == "__main__":
     print("Running consumer")
     records = []

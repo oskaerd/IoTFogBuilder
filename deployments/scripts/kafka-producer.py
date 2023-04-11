@@ -1,6 +1,17 @@
 from kafka import KafkaProducer
 import sys
 
+# Kafka producer. Connects to the proper cluster identified by the IP address and sends each line of the input file
+#   as messages to the given topic.
+# Input arguments:
+#   - IP address
+#   - port that Kafka listens on for external connections
+#   - name of the topic to write to
+#   - text file to read the messages from
+#
+# Example usage:
+#   python kafka-consumer.py 192.168.0.100 19092 books kafka-records
+
 def publish_message(producer_instance, topic_name, key, value):
     try:
         key_bytes = bytes(key, encoding='utf-8')

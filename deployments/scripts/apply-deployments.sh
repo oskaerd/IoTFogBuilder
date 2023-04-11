@@ -1,3 +1,6 @@
+# Applies all listed deployments. No input arguments.
+# Example usage:
+#   ./apply-deployments.sh
 # Kafka
 kubectl apply -f kafka/kafka-namespace.yaml
 kubectl apply -f kafka/zookeeper.yaml
