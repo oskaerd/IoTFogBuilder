@@ -10,7 +10,7 @@ import sys
 #   - text file to read the messages from
 #
 # Example usage:
-#   python kafka-consumer.py 192.168.0.100 19092 books kafka-records
+#   python kafka-procuder.py 192.168.0.100 19092 books kafka-records
 
 def publish_message(producer_instance, topic_name, key, value):
     try:
