@@ -5,7 +5,7 @@ metadata:
 data:
   server.properties: |
     listeners=PLAINTEXT://kafka-broker:9092,EXTERNAL://kafka-broker:19092
-    advertised.listeners=PLAINTEXT://kafka-broker:9092,EXTERNAL://192.168.0.100:19092
+    advertised.listeners=PLAINTEXT://kafka-broker:9092,EXTERNAL://192.168.0.154:19092
     inter.broker.listener.name=PLAINTEXT
 ---
 apiVersion: v1
@@ -50,7 +50,7 @@ spec:
         - name: KAFKA_BROKER_ID
           value: "1"
         - name: KAFKA_ZOOKEEPER_CONNECT
-          value: 10.43.214.82:2181
+          value: 10.43.34.126:2181
         - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
           value: CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
         - name: KAFKA_LISTENERS
@@ -58,7 +58,7 @@ spec:
         - name: KAFKA_INTER_BROKER_LISTENER_NAME
           value: CLIENT
         - name: KAFKA_ADVERTISED_LISTENERS
-          value: EXTERNAL://192.168.0.100:19092,CLIENT://kafka-broker:9092
+          value: EXTERNAL://192.168.0.154:19092,CLIENT://kafka-broker:9092
         image: bitnami/kafka
         imagePullPolicy: IfNotPresent
         name: kafka-broker

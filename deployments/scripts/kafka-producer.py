@@ -35,10 +35,13 @@ def connect_kafka_producer():
         return _producer
 
 if __name__ == '__main__':
-    with open(f'{sys.argv[4]}', 'r') as input_file:
-        records_to_send = input_file.readlines()
-        kafka_producer = connect_kafka_producer()
-        for recipe in records_to_send:
-            publish_message(kafka_producer, sys.argv[3], 'raw', recipe.strip())
-        if kafka_producer is not None:
-            kafka_producer.close()
+    try:
+        with open(f'{sys.argv[4]}', 'r') as input_file:
+            records_to_send = input_file.readlines()
+            kafka_producer = connect_kafka_producer()
+            for recipe in records_to_send:
+                publish_message(kafka_producer, sys.argv[3], 'raw', recipe.strip())
+            if kafka_producer is not None:
+                kafka_producer.close()
+    except IndexError:
+        print("Usage: python kafka-procuder.py IP PORT TOPIC INPUT_FILE")
