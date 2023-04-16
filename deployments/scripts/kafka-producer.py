@@ -16,7 +16,9 @@ def publish_message(producer_instance, topic_name, key, value):
     try:
         key_bytes = bytes(key, encoding='utf-8')
         value_bytes = bytes(value, encoding='utf-8')
+        print('B')
         producer_instance.send(topic_name, key=key_bytes, value=value_bytes)
+        print('C')
         producer_instance.flush()
         print('Message published successfully.')
     except Exception as ex:
@@ -35,13 +37,11 @@ def connect_kafka_producer():
         return _producer
 
 if __name__ == '__main__':
-    try:
-        with open(f'{sys.argv[4]}', 'r') as input_file:
-            records_to_send = input_file.readlines()
-            kafka_producer = connect_kafka_producer()
-            for recipe in records_to_send:
-                publish_message(kafka_producer, sys.argv[3], 'raw', recipe.strip())
-            if kafka_producer is not None:
-                kafka_producer.close()
-    except IndexError:
-        print("Usage: python kafka-procuder.py IP PORT TOPIC INPUT_FILE")
+    with open(f'{sys.argv[4]}', 'r') as input_file:
+        records_to_send = input_file.readlines()
+        kafka_producer = connect_kafka_producer()
+        for recipe in records_to_send:
+            print('A')
+            publish_message(kafka_producer, sys.argv[3], 'raw', recipe.strip())
+        if kafka_producer is not None:
+            kafka_producer.close()
