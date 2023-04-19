@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: kafdrop
-        image: obsidiandynamics/kafdrop:latest
+        image: robsonribeiro/kafdrop-arm64
         env:
         - name: KAFKA_BROKERCONNECT
           value: "kafka:9092"
