@@ -62,6 +62,7 @@ Example: v1.24.9+k3s1
 - sed the IP
 
 
-## Rancher configuration and download
-
+## Installing Prometheus and Grafana from helm chart
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts\n
+helm install prometheus prometheus-community/kube-prometheus-stack
 
