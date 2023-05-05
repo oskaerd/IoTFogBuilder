@@ -43,10 +43,12 @@ spec:
   - name: kafka
     port: 9092
     targetPort: 9092
+    nodePort: 31093
+    protocol: TCP
   - name: external
     port: 19092
     targetPort: 19092
     nodePort: 31092
-    protocol: UDP
+    protocol: TCP
   selector:
     app: kafka
