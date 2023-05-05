@@ -6,7 +6,6 @@ metadata:
   labels:
     app: kafka
 spec:
-  serviceName: kafka
   replicas: 1
   selector:
     matchLabels:
@@ -45,7 +44,6 @@ spec:
   - name: kafka
     port: 9092
     targetPort: 9092
-    nodePort: 31093
     protocol: TCP
   - name: external
     port: 19092
