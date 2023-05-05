@@ -4,6 +4,7 @@ metadata:
   name: kafdrop
   labels:
     app: kafdrop
+  namespace: kafka
 spec:
   replicas: 1
   selector:
@@ -29,6 +30,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kafdrop
+  namespace: kafka
 spec:
   type: NodePort
   ports:
