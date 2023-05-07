@@ -1,3 +1,4 @@
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm install prometheus --namespace prometheus --create-namespace prometheus-community/kube-prometheus-stack 
 echo
 echo
