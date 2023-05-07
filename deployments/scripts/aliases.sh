@@ -3,6 +3,7 @@
 #   ./aliases.sh
 alias k=kubectl
 alias kk="kubectl -n kafka"
+alias kp="kubectl -n prometheus"
 alias cls=clear
 alias python=python3
 alias py=python3
