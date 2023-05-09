@@ -5,4 +5,4 @@ echo
 echo "########### Now run:###########"
 echo "kubectl edit service prometheus-grafana"
 echo "And change service type from ClusterIp to NodePort"
-echo "And set nodePort to desired exposed port"
+echo "And set nodePort to desired exposed port (our setting is 30000)"
