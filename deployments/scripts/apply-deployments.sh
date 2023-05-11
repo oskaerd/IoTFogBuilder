@@ -13,6 +13,5 @@ kubectl apply -f ../couchdb/couchdb.yaml
 # NodeRED
 kubectl apply -f ../node-red/node-red-namespace.yaml
 kubectl apply -f ../node-red/node-red.yaml
-# Grafana
-kubectl apply -f ../grafana/grafana-namespace.yaml
-kubectl apply -f ../grafana/grafana.yaml
+# Prometheus/Grafana
+../grafana/deploy-prometheus-grafana.sh
