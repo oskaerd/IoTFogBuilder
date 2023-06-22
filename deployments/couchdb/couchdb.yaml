@@ -47,7 +47,7 @@ spec:
               key: couchdb-root-password
         volumeMounts:
             - name: couchdb-data
-              mountPath: /mnt/couchdb-samba # Mount path for data
+              mountPath: /couchdb
       volumes:
         - name: couchdb-data
           emptyDir: {}

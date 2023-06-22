@@ -36,7 +36,7 @@ spec:
             - containerPort: 1880
           volumeMounts:
             - name: nodered-data
-              mountPath: /mnt/nodered-samba
+              mountPath: /data
       volumes:
         - name: nodered-data
           emptyDir: {}
