@@ -88,7 +88,17 @@ class K3sNode:
         pass
 
     def get_controller_token(self):
-        # TODO: This needs to reach out to K3sRpiConfigurator to get the controller key. Should be some observer or sth
+        pass
+
+    def send_and_source_aliases(self):
+        self.ssh.command("rm aliases.sh")
+        with open('aliases.sh') as aliases_sh:
+            for line in aliases_sh.readlines():
+                line = line.replace('\r', '').replace('\n', '')
+                self.ssh.command(f"echo \"{line}\" >> aliases.sh")
+        self.ssh.command("echo \"source aliases.sh\" >> ~/.bashrc")
+
+    def send_deployments(self):
         pass
 
     def __str__(self):

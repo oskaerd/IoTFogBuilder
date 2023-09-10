@@ -29,8 +29,6 @@ class K3sRpiConfigurator:
             # Phase 1: OS preparation phase - installing required modules
             #          and applying settings.
             if node.check_if_running_current_phase(1):
-                node.overwrite_firmware_config_files()
-                node.set_ip_tables()
                 node.install_required_modules()
 
             # Phase 2: K3s configuration file and download
@@ -42,6 +40,8 @@ class K3sRpiConfigurator:
                 if self.controller_token is None:
                     self.controller_token = node.get_controller_token(None)
                     self.controller_ip = node.get_controller_ip()
-                
+            # Phase 3: 
+            if node.check_if_running_current_phase(3):
+                node.send_and_source_aliases()
             print(f"\tFinished configuration of node {node.node_name}:{node.ip}")
         print("Finished configuration of all the nodes from the JSON file that were connected.")

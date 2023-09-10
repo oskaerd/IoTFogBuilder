@@ -1,0 +1,19 @@
+{
+    "k3s_version": "v1.24.6+k3s1",
+    "machines": [
+        {
+            "username": "oskar",
+            "node_name": "controler",
+            "ip": "192.168.0.74",
+            "is_controller": 1,
+            "phases": [3]
+        },
+        {
+            "username": "ubuntu",
+            "node_name": "agent0",
+            "ip": "192.168.0.137",
+            "is_controller": 0,
+            "phases": [3]
+        }
+    ]
+}
