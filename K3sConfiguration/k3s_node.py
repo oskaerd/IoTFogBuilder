@@ -90,12 +90,18 @@ class K3sNode:
     def get_controller_token(self):
         pass
 
+    def send_deployment_files(self):
+        pass
+
+    def send_file(self, file_to_send):
+        with open(file_to_send) as fts:
+            for line in fts.readlines():
+                line = line.replace('\r', '').replace('\n', '')
+                self.ssh.command(f"echo \"{line}\" >> {file_to_send}")
+
     def send_and_source_aliases(self):
         self.ssh.command("rm aliases.sh")
-        with open('aliases.sh') as aliases_sh:
-            for line in aliases_sh.readlines():
-                line = line.replace('\r', '').replace('\n', '')
-                self.ssh.command(f"echo \"{line}\" >> aliases.sh")
+        self.send_file("aliases.sh")
         self.ssh.command("echo \"source aliases.sh\" >> ~/.bashrc")
 
     def __str__(self):

@@ -12,7 +12,7 @@ class NodeSshController:
         self.status_ok = True
         self.config = {}
 
-        with open('setup.cfg', 'r') as cfg:
+        with open('log_setup.cfg', 'r') as cfg:
             lines = cfg.readlines()
             for line in lines:
                 key = line[:line.find('=')]

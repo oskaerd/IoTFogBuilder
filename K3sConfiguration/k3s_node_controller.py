@@ -1,3 +1,4 @@
+import os
 from .k3s_node import K3sNode
 
 
@@ -32,6 +33,16 @@ class K3sControllerNode(K3sNode):
         self.ssh.command("curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3")
         self.ssh.command("chmod 700 get_helm.sh")
         self.ssh.sudo_command("./get_helm.sh")
+
+    def send_deployment_files(self):
+        self.ssh.command("rm -rf deployments")
+        self.ssh.command("mkdir deployments")
+
+        deployment_directories = ['couchdb', 'grafana', 'kafka', 'node-red', 'scripts']
+        for dir in deployment_directories:
+            self.ssh.command(f"mkdir deployments/{dir}")
+            for file in os.listdir(f"deployments/{dir}"):
+                self.send_file(f"deployments/{dir}/{file}")
 
     def get_controller_ip(self):
         return self.ip

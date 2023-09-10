@@ -40,12 +40,14 @@ class K3sRpiConfigurator:
                 if self.controller_token is None:
                     self.controller_token = node.get_controller_token(None)
                     self.controller_ip = node.get_controller_ip()
-            # Phase 3: Copying files to nodes: 
+            # Phase 3: Copying aliases file to nodes: 
             if node.check_if_running_current_phase(3):
                 node.send_and_source_aliases()
 
-            # Phase 4: Install helm on controller node
+            # Phase 4: Install helm on controller node and send deployment files
             if node.check_if_running_current_phase(4):
-                node.helm_install()
+                #node.helm_install()
+                node.send_deployment_files()
+
             print(f"\tFinished configuration of node {node.node_name}:{node.ip}")
         print("Finished configuration of all the nodes from the JSON file that were connected.")
