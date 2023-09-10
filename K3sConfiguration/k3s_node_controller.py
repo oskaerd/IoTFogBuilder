@@ -28,6 +28,11 @@ class K3sControllerNode(K3sNode):
         controller_token = self.ssh.sudo_command("cat /var/lib/rancher/k3s/server/node-token")[-1].replace('\r', '').replace('\n', '')
         return controller_token
 
+    def helm_install(self):
+        self.ssh.command("curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3")
+        self.ssh.command("chmod 700 get_helm.sh")
+        self.ssh.sudo_command("./get_helm.sh")
+
     def get_controller_ip(self):
         return self.ip
 

@@ -98,9 +98,6 @@ class K3sNode:
                 self.ssh.command(f"echo \"{line}\" >> aliases.sh")
         self.ssh.command("echo \"source aliases.sh\" >> ~/.bashrc")
 
-    def send_deployments(self):
-        pass
-
     def __str__(self):
         return f"IP: {self.ip}, name: {self.node_name} - node"
 
