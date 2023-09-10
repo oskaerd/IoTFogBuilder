@@ -58,12 +58,13 @@ class K3sNode:
         self.ssh.sudo_command("update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy")
         print(" Done.\n\tInstalling missing Ubuntu kernel packages for raspberry (takes up to 10 minutes).")
 
-    def install_required_modules(self, verbose = False):
+    def install_required_modules(self):
         # Don't really need to check if these are already installed.
         # If so, the package will just get skipped so we're fine.
         # -y to skip prompt if one wants to install the package
         # curl usually is installed on RPis but make sure for other platforms:
         self.ssh.sudo_command("apt install -y curl")
+        self.ssh.sudo_command("apt install -y cifs-utils")
 
         # Below takes some noticable time (~6 minutes) to complete.
         # DEBIAN_FRONTEND=noninteractive - disables interactive prompt for the reset. Since the prompt is visual
@@ -73,6 +74,12 @@ class K3sNode:
         print('\tDone. \n\tRebooting.')
 
         self.reboot_and_reconnect()
+
+    def install_and_setup_samba(self):
+        self.ssh.sudo_command("apt install -y samba smbclient")
+        self.ssh.sudo_command("sudo mkdir /mnt/local_share")
+        # Need to follow manually with:
+        # sudo mount -t cifs //<samba-server-ip>/sambashare /mnt/local_share/ -o username=<username>        
 
     def reboot_and_reconnect(self):
         self.ssh.sudo_command("reboot")

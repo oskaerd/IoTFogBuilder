@@ -40,9 +40,10 @@ class K3sRpiConfigurator:
                 if self.controller_token is None:
                     self.controller_token = node.get_controller_token(None)
                     self.controller_ip = node.get_controller_ip()
-            # Phase 3: Copying aliases file to nodes: 
+            # Phase 3: Copying aliases file to nodes and install samba: 
             if node.check_if_running_current_phase(3):
                 node.send_and_source_aliases()
+                node.install_and_setup_samba()
 
             # Phase 4: Install helm on controller node and send deployment files
             if node.check_if_running_current_phase(4):

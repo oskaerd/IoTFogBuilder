@@ -34,6 +34,15 @@ class K3sControllerNode(K3sNode):
         self.ssh.command("chmod 700 get_helm.sh")
         self.ssh.sudo_command("./get_helm.sh")
 
+    def install_and_setup_samba(self):
+        self.ssh.sudo_command("apt install -y samba smbclient")
+        self.ssh.command("mkdir sambashare")
+        self.ssh.sudo_command("ln -s ~/sambashare /mnt/local_share")
+        # Need to manually edit /etc/samba/smb.conf as described in the documentation and apply following commands:
+        # sudo service smb restart
+        # sudo ufw allow samba
+        # sudo smbpasswd -a <username>
+
     def send_deployment_files(self):
         self.ssh.command("rm -rf deployments")
         self.ssh.command("mkdir deployments")
