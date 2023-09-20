@@ -75,6 +75,9 @@ class K3sNode:
 
         self.reboot_and_reconnect()
 
+    def helm_install(self):
+        pass
+
     def install_and_setup_samba(self):
         self.ssh.sudo_command("apt install -y samba smbclient")
         self.ssh.sudo_command("sudo mkdir /mnt/local_share")

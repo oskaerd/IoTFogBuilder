@@ -1,68 +1,90 @@
-Python utility to configure RPi with freshly flashed SD card to work as an K3s node.
+Python utility to setup K3s cluster on number of devices Raspberry PIs and other devices. It connects to the devices over SSH and performs necesary installation. Along the K3s there is also samba package installed (but not configured) so it can be used in the cluster for some common memory location.
+
+Cluster architecture is determined in JSON file provided to the script as an input parameter.
+The layout of JSON file should be as follows:
+
+```json
+{
+    "k3s_version": "v1.24.6+k3s1",
+    "machines": [
+        {
+            "username": "laptop-vm",
+            "node_name": "controler",
+            "ip": "192.168.0.74",
+            "is_controller": 1,
+            "phases": [2, 3, 4]
+        },
+        {
+            "username": "rpi",
+            "node_name": "agent0",
+            "ip": "192.168.0.75",
+            "is_controller": 0,
+            "phases": [1, 2, 3, 4]
+        },
+        ...
+        {
+            "username": "rpi",
+            "node_name": "agentN",
+            "ip": "192.168.0.100",
+            "is_controller": 0,
+            "phases": [1, 2, 3, 4]
+        }
+    ] 
+}
+```
+
+Required parameters are:
+k3s_version - version of the K3s to be installed on nodes.
+machines - list of the machines to setup. Each alement of the list must contain of:
+    - username - system username to login with over SSH
+    - node_name - descriptive name of the node in the cluster
+    - ip - node IP
+    - is_controller - 0 or 1 to mark the controller node
+    - phases - list of steps 1-4 to perform, see details in further section
 
 # Notes to the input JSON file:
-1. The controller node should be listed as the first one so its key is known for the workers.
+1. The controller node should be listed as the first one so its key is known for other nodes.
 2. There should be no more than one controller in the JSON. Otherwise further controllers
 will be used and the tool will end up creating more clusters depending on the order in the file.
 
-# Instructions for preparing the raspberry for K3s cluster:
-Each of the following paragraphs is considered a phase in the setup process.
-First one is extracted bacause it requires a reboot and additional handling of
-reconnecting to the Raspberry module. Other ones are abstacted in a way that some
-components can be removed (like K3s itself) and recreated using the tool.
+# Devices Setup
+The script can be run against any Linux/Ubuntu/Raspbain OS machines combination. The tool installs required packages and tools for K3s setup. Tested configuration contained 5 RPis with Ubuntu OS or Ubuntu VM hosted on Windows + single RPi with Ubunut OS.
+It is recommended to run script against freshly installed OS images, so no previously installed tools interfere with the K3s configuration process.
+The tool assumes user password (the one that you type while connecting over SSH to your machines) is the same on all the machines. Feel free to change it after the setup is done.
 
-## OS preparation phase
-This phase prepares Ubuntu image and sets it to work with the K3s.
+# Phases executed for K3s installation:
+Each of the following paragraphs is considered a **phase** in the setup process that can be run or not depending on the configuration described in JSON file.
+First phase is extracted because it is specific to non-Raspbian OS installed on a RPi machine that requires a reboot and additional handling of reconnecting to the Raspberry. Other ones are abstracted in a way that some components can be removed (like K3s itself) and recreated using the tool.
 
-### 0. Prepare Ubuntu image in imager software:
-This step is manual. Prepare SD card using Raspberry Pi Imager (v1.7.3 as of the moment of writing).
-In the software pick:
-- Ubuntu 32/64-bit version depending on the RPi model
-    - using version 22.04 LTS
-- In additional settings:
-    - enable ssh
-    - provide WLAN credentials if wireless connection is required
-        - do not set WiFi credentials for modules that do not support wireless connection. There were problems connecting with wired connection on Raspberry Pi 2 if these were set.
-- Set username and password. Assumption is to default to some common password across the nodes and change it after the setup.
-- Write SD card
+## Phase 0:
+Prepare SD cards with operating system flashed for Raspberry Pis or any other machines. 
 
-### 1. Modify firmware configuration files:
-- /boot/firmware/config.txt -> append "add arm_64bit=1" in new line to the file
-- /boot/firmware/cmdline.txt -> append "cgroup_memory=1 cgroup_enable=memory" to the only line in the file
+## Phase 1: OS preparation phase
+In the project, it is assumed that each machine will have Ubuntu OS installed running on Raspberry Pi 4. It means that there must be installed kernel module specific for it called *linux-modules-extra-raspi*. Phase 1 consist of installation of given module and other packages required to install K3s later on.
+Note: this phase should be skipped in other architectures. In that case, **curl** must be installed manually on given machine as it is necessary for K3s download and installation.
 
-### 2. Set legacy IP tables
-- sudo iptables -F
-- sudo update-alternatives --set iptables /usr/sbin/iptables-legacy
-- sudo update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
+## Phase 2: K3s download and installation
+In this phase, K3s is downoladed and installed on each device with given role in a cluster. The script automates any exchange of values required for nodes to connect to controller and cluster.
 
-### 3. Install linux-modes-extra-raspi module:
-- sudo apt install linux-modes-extra-raspi
-- reboot, the tool shall reconnect on its own
+## Phase 3: Copy over aliases file and install samba
+This phase copies file with aliases I like and adds sourcing them to .bashrc file so they are present in terminal whenever user connects. Also samba is installed in this phase but needs to be configured manually after the process is complete.
 
-## K3s configuration and download phase
-### 1. Prepare config directory and export its location:
-- mkdir ~/.kube
-- echo "export KUBECONFIG=/home/{username}/.kube/config" >> ~/.bashrc
-### 2. Download and install K3s
-1. 
-    a.Controller:
-        - curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="k3s-version-from-json" K3S_KUBECONFIG_MODE="644" sh -s -
-        - get the node token from controller node:
-            sudo cat /var/lib/rancher/k3s/server/node-token
+## Phase 4: Install helm on controller node and send deployment files
+In this phase, deployment files present in repository are sent over to controller node. Also Kubernetes package manager **helm** is installed on controller node in this phase. Since running this phase doesn't make much sense for worker nodes, this will be ignored for them. If you really want to make this happen, it needs to be done manually.
 
-    b. Worker:
-        - curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="k3s-version-from-json" K3S_TOKEN="CONTROLLER_TOKEN" K3S_URL="https://[controller ip]:6443" K3S_NODE_NAME="some-node-name" sh -
+You can rule out any of these phases by not marking them to run in JSON file in field machines.phases. To run only K3s installation (2) and sending deployment files (4) the field should look like this:
+"phases": [2, 4]  
 
-K3s version is parametrized in the JSON and mandatory to provide. The format is version string as in the K3s repository:
-https://github.com/k3s-io/k3s/releases
-Example: v1.24.9+k3s1
+# Running the tool:
+Class that takes care of whole process needs two parameters to be passed:
+1. JSON file describing your architecture
+2. SSH password - so it's never kept on this repository
 
-### 3. Copy and modify the config file for controller IP:
-- cp /etc/rancher/k3s/k3s.yaml /home/{username}/.kube/config
-- sed the IP
+There are two ways to run the installation:
+1. In your command line run main.py script:
+python main.py <your_cluster_rachitecture.json> <ssh_password>
 
-
-## Installing Prometheus and Grafana from helm chart
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts\n
-helm install prometheus prometheus-community/kube-prometheus-stack
-
+2. In python session, import the module and run it with input as arguments:
+>>> from K3sConfiguration import k3s_configurator
+>>> configurator = k3s_configurator.K3sRpiConfigurator('cluster.json', 'password')
+>>> configurator.configure_nodes()

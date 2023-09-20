@@ -47,7 +47,7 @@ class K3sRpiConfigurator:
 
             # Phase 4: Install helm on controller node and send deployment files
             if node.check_if_running_current_phase(4):
-                #node.helm_install()
+                node.helm_install()
                 node.send_deployment_files()
 
             print(f"\tFinished configuration of node {node.node_name}:{node.ip}")
