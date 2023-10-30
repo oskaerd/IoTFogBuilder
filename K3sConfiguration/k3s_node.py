@@ -64,16 +64,16 @@ class K3sNode:
         # -y to skip prompt if one wants to install the package
         # curl usually is installed on RPis but make sure for other platforms:
         self.ssh.sudo_command("apt install -y curl")
-        self.ssh.sudo_command("apt install -y cifs-utils")
 
         # Below takes some noticable time (~6 minutes) to complete.
         # DEBIAN_FRONTEND=noninteractive - disables interactive prompt for the reset. Since the prompt is visual
         # it causes the tool to hang for stdout flush despite module getting installed.
         self.ssh.sudo_command("DEBIAN_FRONTEND=noninteractive apt install -y linux-modules-extra-raspi")
-
         print('\tDone. \n\tRebooting.')
 
         self.reboot_and_reconnect()
+
+        self.ssh.sudo_command("apt install -y cifs-utils")
 
     def helm_install(self):
         pass
@@ -92,6 +92,7 @@ class K3sNode:
 
     def install_k3s(self, k3s_version, controller_ip, controller_token):
         print('\tInstalling K3s on the worker node.')
+        # curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=1.24.6+k3s1 K3S_TOKEN=K103489246310f39fa47bab6b49983d52b33f7d3324376c574f6085a55c21ea52d2::server:f04768b32e4c90c9792b1ab5dd2e5907 K3S_URL="https://192.168.0.100:6443 K3S_NODE_NAME=agent3"
         self.ssh.sudo_command(f"curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=\"{k3s_version}\" K3S_TOKEN=\"{controller_token}\" K3S_URL=\"https://{controller_ip}:6443\" K3S_NODE_NAME=\"{self.node_name}\" sh -")
 
     def write_final_k3s_config_file(self):

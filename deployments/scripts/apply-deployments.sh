@@ -2,10 +2,10 @@
 # Example usage:
 #   ./apply-deployments.sh
 # Kafka
-# kubectl apply -f ../kafka/kafka-namespace.yaml
-# kubectl apply -f ../kafka/zookeeper.yaml
-# kubectl apply -f ../kafka/kafka.yaml
-# kubectl apply -f ../kafka/kafdrop.yaml
+kubectl apply -f ../kafka/kafka-namespace.yaml
+kubectl apply -f ../kafka/zookeeper.yaml
+kubectl apply -f ../kafka/kafka.yaml
+kubectl apply -f ../kafka/kafdrop.yaml
 # CouchDB
 kubectl apply -f ../couchdb/couchdb-namespace.yaml
 kubectl apply -f ../couchdb/couchdb-secret.yaml

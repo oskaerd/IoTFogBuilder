@@ -39,7 +39,7 @@ class K3sControllerNode(K3sNode):
         self.ssh.command("mkdir sambashare")
         self.ssh.sudo_command("ln -s ~/sambashare /mnt/local_share")
         # Need to manually edit /etc/samba/smb.conf as described in the documentation and apply following commands:
-        # sudo service smb restart
+        # sudo service smbd restart
         # sudo ufw allow samba
         # sudo smbpasswd -a <username>
 
@@ -52,6 +52,7 @@ class K3sControllerNode(K3sNode):
             self.ssh.command(f"mkdir deployments/{dir}")
             for file in os.listdir(f"deployments/{dir}"):
                 self.send_file(f"deployments/{dir}/{file}")
+        self.ssh.command("chmod +x ~/deployments/scripts/apply-deployments.sh")
 
     def get_controller_ip(self):
         return self.ip

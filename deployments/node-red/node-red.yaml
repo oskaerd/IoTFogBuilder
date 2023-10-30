@@ -36,7 +36,7 @@ spec:
             - containerPort: 1880
           volumeMounts:
             - name: nodered-data
-              mountPath: /data
+              mountPath: /mnt/local_share
       volumes:
         - name: nodered-data
           emptyDir: {}
