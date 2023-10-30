@@ -47,7 +47,7 @@ spec:
               key: couchdb-root-password
         volumeMounts:
             - name: couchdb-data
-              mountPath: /mnt/local_share
+              mountPath: /data
       volumes:
         - name: couchdb-data
           emptyDir: {}
