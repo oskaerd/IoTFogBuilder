@@ -10,6 +10,7 @@ alias ll='ls -l'
 alias cls=clear
 alias python=python3
 alias py=python3
+# alias nodeips='kubectl get nodes -o wide | awk -v OFS='\t\t' '{print $1, $6, $7}''
 check_port() {
     sudo ss -lptn "sport = :$1"
 }

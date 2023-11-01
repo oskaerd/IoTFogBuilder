@@ -34,7 +34,7 @@ spec:
       - image: bitnami/zookeeper
         env:
         - name: ALLOW_ANONYMOUS_LOGIN
-          value: yes
+          value: \"yes\"
         imagePullPolicy: Always
         name: zookeeper
         ports:

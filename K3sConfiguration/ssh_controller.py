@@ -39,14 +39,14 @@ class NodeSshController:
             self.status_ok = False
 
     def log_input(self, command):
-        line_to_log = f"IN {self.ip} << {command}"
+        line_to_log = f"IN {self.ip} << {command}\n"
         if self.verbose:
             print(line_to_log)
         if self.logging:
             self.log.write(line_to_log.encode('utf-8', 'replace'))
 
     def log_output(self, command):
-        log_command = f"OUT {self.ip} >> {command}"
+        log_command = f"OUT {self.ip} >> {command}\n"
         if self.verbose:
             print(log_command)
         if self.logging:

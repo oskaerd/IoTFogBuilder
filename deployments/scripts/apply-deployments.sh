@@ -15,6 +15,7 @@ kubectl apply -f ../node-red/node-red-namespace.yaml
 kubectl apply -f ../node-red/node-red.yaml
 # Prometheus/Grafana
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
 helm install prometheus --namespace prometheus --create-namespace prometheus-community/kube-prometheus-stack 
 # rabbit
 helm install my-release oci://registry-1.docker.io/bitnamicharts/rabbitmq --set auth.username="guest" --set auth.password="guest"

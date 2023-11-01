@@ -44,10 +44,10 @@ class K3sRpiConfigurator:
             if node.check_if_running_current_phase(3):
                 node.send_and_source_aliases()
                 node.install_and_setup_samba()
-
-            # Phase 4: Install helm on controller node and send deployment files
-            if node.check_if_running_current_phase(4):
                 node.helm_install()
+
+            # Phase 4: Send deployment files
+            if node.check_if_running_current_phase(4):
                 node.send_deployment_files()
 
             print(f"\tFinished configuration of node {node.node_name}:{node.ip}")
