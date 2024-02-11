@@ -118,3 +118,5 @@ class K3sNode:
     def __str__(self):
         return f"IP: {self.ip}, name: {self.node_name} - node"
 
+    def run_deployments(self):
+        pass
