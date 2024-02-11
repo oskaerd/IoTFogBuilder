@@ -63,14 +63,14 @@ class K3sNode:
         # If so, the package will just get skipped so we're fine.
         # -y to skip prompt if one wants to install the package
         # curl usually is installed on RPis but make sure for other platforms:
-        self.ssh.sudo_command("apt install -y curl")
 
         # Below takes some noticable time (~6 minutes) to complete.
         # DEBIAN_FRONTEND=noninteractive - disables interactive prompt for the reset. Since the prompt is visual
         # it causes the tool to hang for stdout flush despite module getting installed.
         self.ssh.sudo_command("DEBIAN_FRONTEND=noninteractive apt install -y linux-modules-extra-raspi")
-        print('\tDone. \n\tRebooting.')
+        self.ssh.sudo_command("apt install -y curl")
 
+        print('\tDone. \n\tRebooting.')
         self.reboot_and_reconnect()
 
         self.ssh.sudo_command("apt install -y cifs-utils")

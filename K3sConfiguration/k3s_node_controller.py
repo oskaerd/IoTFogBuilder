@@ -16,6 +16,9 @@ class K3sControllerNode(K3sNode):
 
     def install_k3s(self, k3s_version, controller_ip, controller_token):
         print('\tInstalling K3s on the controller node.')
+        # This is probably redundant but sometimes (with VM) we skip 1st phase so there may be no curl on the node.
+        # If already installed, it'll be just skipped.
+        self.ssh.sudo_command("apt install -y curl")
         self.ssh.sudo_command(f"curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=\"{k3s_version}\" K3S_KUBECONFIG_MODE=\"644\" sh -s -")
 
     def write_final_k3s_config_file(self):
