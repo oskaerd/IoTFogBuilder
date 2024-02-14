@@ -50,9 +50,9 @@ class K3sRpiConfigurator:
             if node.check_if_running_current_phase(4):
                 node.send_deployment_files()
 
-            # Phase 5: Run deployments
-            if node.check_if_running_current_phase(5):
-                node.run_deployments()
-
             print(f"\tFinished configuration of node {node.node_name}:{node.ip}")
+
+        # Phase 5: Run deployments once cluster is ready
+        if self.nodes[0].check_if_running_current_phase(5):
+            self.nodes[0].run_deployments()
         print("Finished configuration of all the nodes from the JSON file that were connected.")

@@ -64,4 +64,4 @@ class K3sControllerNode(K3sNode):
         return f"IP: {self.ip}, name: {self.node_name} - controller"
 
     def run_deployments(self):
-        self.ssh.command("cd deployments/scripts; ./apply_deployments.sh; cd ../..")
+        self.ssh.command("./deployments/scripts/apply-deployments.sh")
