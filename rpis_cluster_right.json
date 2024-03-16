@@ -13,7 +13,8 @@
             "node_name": "agent20",
             "ip": "192.168.0.110",
             "is_controller": 0,
-            "phases": [1, 2, 3, 4, 5]
+            "phases": [1, 2, 3, 4, 5],
+            "reinstall": ""
         },
         {
             "username": "ubuntu",

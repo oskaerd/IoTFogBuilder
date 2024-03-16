@@ -11,6 +11,5 @@ version = configurator.k3s_install_version
 
 for node in configurator.nodes[1:]:
     if node.reinstall:
-        print(f'unagent {node.ip}')
         node.ssh.sudo_command("unagent")
         node.install_k3s(version, configurator.nodes[0].ip, token)

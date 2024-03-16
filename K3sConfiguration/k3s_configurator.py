@@ -57,3 +57,12 @@ class K3sRpiConfigurator:
         if self.nodes[0].check_if_running_current_phase(5):
             self.nodes[0].run_deployments()
         print("Finished configuration of all the nodes from the JSON file that were connected.")
+
+
+    def transfer_nodes(self):
+        new_token = self.nodes[0].get_controller_token()
+
+        for node in self.nodes[1:-1]:
+            node.ssh.sudo_command("unagent")
+            node.install_k3s(self.k3s_install_version, self.nodes[0].ip, new_token)
+            self.nodes[-1].ssh.command(f'kubectl delete node {node.node_name}')
