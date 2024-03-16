@@ -3,12 +3,13 @@ import time
 
 
 class K3sNode:
-    def __init__(self, username, node_name, ip, phases, password):
+    def __init__(self, username, node_name, ip, phases, password, reinstall=False):
         self.node_name = node_name
         self.ip = ip
         self.username = username
         self.connection_failed = False
         self.phases = phases
+        self.reinstall = reinstall
 
         # SSH connection
         print(f"\tConnecting to target node {ip}")

@@ -34,7 +34,8 @@ class K3sRpiConfigurator:
             # Phase 2: K3s configuration file and download
             if node.check_if_running_current_phase(2):
                 node.prepare_k3s_config_file()
-                node.install_k3s(self.k3s_install_version, self.controller_ip, self.controller_token)
+                node.install_k3s(self.k3s_install_version, self.controller_ip,
+                                    self.controller_token)
                 node.write_final_k3s_config_file()
                 # Get the token and IP from the controller to pass it to the nodes:
                 if self.controller_token is None:

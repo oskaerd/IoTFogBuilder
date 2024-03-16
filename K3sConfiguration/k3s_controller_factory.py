@@ -16,7 +16,8 @@ class K3sControllerFactory:
         name = json_data['node_name']
         username = json_data['username']
         phases = json_data['phases']
-        self.k3s = k3s_class(username, name, ip, phases, password)
+        reinstall = "reinstall" in json_data.keys()
+        self.k3s = k3s_class(username, name, ip, phases, password, reinstall)
 
     def get_node(self):
         return self.k3s

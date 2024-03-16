@@ -3,8 +3,8 @@ from .k3s_node import K3sNode
 
 
 class K3sControllerNode(K3sNode):
-    def __init__(self, username, node_name, ip, phases, password):
-        super().__init__(username, node_name, ip, phases, password)
+    def __init__(self, username, node_name, ip, phases, password, reinstall):
+        super().__init__(username, node_name, ip, phases, password, reinstall)
 
     def prepare_k3s_config_file(self):
         print("\tPreparing K3s config directory and files.")
