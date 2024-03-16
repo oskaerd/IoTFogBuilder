@@ -116,8 +116,11 @@ class K3sNode:
         self.send_file("aliases.sh")
         self.ssh.command("echo \"source aliases.sh\" >> ~/.bashrc")
 
-    def __str__(self):
-        return f"IP: {self.ip}, name: {self.node_name} - node"
-
     def run_deployments(self):
         pass
+
+    def uninstall_k3s(self):
+        self.ssh.sudo_command("/usr/local/bin/k3s-agent-uninstall.sh")
+
+    def __str__(self):
+        return f"IP: {self.ip}, name: {self.node_name} - node"

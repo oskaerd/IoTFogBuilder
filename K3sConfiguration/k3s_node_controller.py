@@ -60,8 +60,11 @@ class K3sControllerNode(K3sNode):
     def get_controller_ip(self):
         return self.ip
 
-    def __str__(self):
-        return f"IP: {self.ip}, name: {self.node_name} - controller"
-
     def run_deployments(self):
         self.ssh.command("./deployments/scripts/apply-deployments.sh")
+
+    def uninstall_k3s(self):
+        self.ssh.sudo_command("/usr/local/bin/k3s-uninstall.sh")
+
+    def __str__(self):
+        return f"IP: {self.ip}, name: {self.node_name} - controller"
