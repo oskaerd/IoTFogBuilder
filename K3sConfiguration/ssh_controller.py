@@ -1,6 +1,7 @@
 import paramiko
 import datetime as dt
 import time
+import os
 
 
 class NodeSshController:
@@ -27,6 +28,16 @@ class NodeSshController:
 
             if self.logging:
                 self.log = open(self.logfile, 'wb')
+
+        # just Windows things...
+        if os.name == 'nt':
+            try:
+                tmp_ssh = paramiko.SSHClient()
+                tmp_ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                self._ssh.connect(ip, username=username, password=password, timeout=1)
+            except:
+                # Quietly face the Windows struggle with 1st connection
+                pass
 
         # SSH connection
         try:
