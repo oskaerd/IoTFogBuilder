@@ -10,7 +10,6 @@ class K3sNode:
         self.connection_failed = False
         self.phases = phases
         self.reinstall = reinstall
-
         # SSH connection
         print(f"\tConnecting to target node {ip}")
         self.ssh = NodeSshController(ip, username, password)

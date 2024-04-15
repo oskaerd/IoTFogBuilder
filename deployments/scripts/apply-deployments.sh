@@ -21,9 +21,9 @@ helm install prometheus --namespace prometheus --create-namespace prometheus-com
 helm install my-release oci://registry-1.docker.io/bitnamicharts/rabbitmq --set auth.username="guest" --set auth.password="guest"
 sleep 60
 # patch helm deployments
-kubectl patch svc couchdb-service -n couchdb -p '{"spec":{"type":"NodePort"}}'
-kubectl patch svc couchdb-service -n couchdb -p '{"spec": {"ports": [{"nodePort": 30984, "port": 5984}]} }'
+kubectl patch svc couchdb-service -n couchdb -p '{\"spec\":{\"type\":\"NodePort\"}}'
+kubectl patch svc couchdb-service -n couchdb -p '{\"spec\": {\"ports\": [{\"nodePort\": 30984, \"port\": 5984}]} }'
 kubectl patch svc prometheus-grafana -n prometheus -p '{"spec":{"type":"NodePort"}}'
-kubectl patch svc prometheus-grafana -n prometheus -p '{"spec": {"ports": [{"nodePort": 30000, "port": 80}]} }'
-kubectl patch svc my-release-rabbitmq -p '{"spec":{"type":"NodePort"}}'
-kubectl patch svc my-release-rabbitmq -p '{"spec": {"ports": [{"nodePort": 31000, "port": 15672}]} }'
+kubectl patch svc prometheus-grafana -n prometheus -p '{\"spec\": {\"ports\": [{\"nodePort\": 30000, \"port\": 80}]} }'
+kubectl patch svc my-release-rabbitmq -p '{\"spec\":{\"type\":\"NodePort\"}}'
+kubectl patch svc my-release-rabbitmq -p '{\"spec\": {\"ports\": [{\"nodePort\": 31000, \"port\": 15672}]} }'
